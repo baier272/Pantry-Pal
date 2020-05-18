@@ -1,0 +1,29 @@
+# 带数量的新鲜易耗食材
+
+#加载
+import pickle
+import os
+
+# 字段初始值
+# freshfood = {}
+changes = {}
+
+#定义功能
+
+#读取数据文件，并生成临时变量 tempdata
+def readdata(valuename):
+    filename =  valuename + ".data"
+    if os.path.exists(filename):
+        f = open(filename, "rb")
+        tempdata = pickle.load(f)
+        return tempdata
+    else:
+        print("❗️ no such file:%s", filename)
+       
+#保存变量的同名数据文件
+def saveit(vir,name):
+    filename = name + ".data"
+    f = open(filename, 'wb')
+    pickle.dump(vir, f)
+    f.close()
+    print("\n✅ 已储存到 "+name+".data")
