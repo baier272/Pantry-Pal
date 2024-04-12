@@ -8,11 +8,34 @@ import pickle
 import os
 
 # 字段初始值
-# freshfood = {}
 changes = {}
 
 
 #定义功能
+
+#保存变量的同名数据文件
+def saveit(vir,name):
+    filename = name + ".data"
+    f = open(filename, 'wb')
+    pickle.dump(vir, f)
+    f.close()
+    print("\n✅ 已储存到 "+name+".data")
+
+
+def initialize(valuename):
+    filename = valuename + ".data"
+    f = open(filename, "wb")
+    if valuename == "freshfood":
+        freshfood = {'vegetables': {'青椒': 3, '菠菜': 1, '生菜': 1}, 'protein': {'豆腐': 2, '豆豉鲮鱼': 1}, 'carbon': {'土豆': 4, '红薯': 5}, 'complex': {'鸿禧菇': 2, '金针菇': 1}, 'fruits': {'香蕉': 3,  '橙子': 1}}
+        fb = open("freshfood.data", 'wb')
+        pickle.dump(freshfood, fb)  # 存入总字典文件
+        print("\n✅ 已初始化 freshfood.data")
+    elif valuename == "danger":
+        danger = {"香蕉":2,"豆腐":1}
+        fb = open("danger.data", 'wb')
+        pickle.dump(danger, fb)  # 存入快到期食材
+        print("\n✅ 已初始化 danger.data")
+    fb.close()
 
 
 #读取数据文件，并生成临时变量 tempdata
@@ -23,16 +46,11 @@ def readdata(valuename):
         tempdata = pickle.load(f)
         return tempdata
     else:
-        print("❗️ no such file:%s", filename)
-
-
-#保存变量的同名数据文件
-def saveit(vir,name):
-    filename = name + ".data"
-    f = open(filename, 'wb')
-    pickle.dump(vir, f)
-    f.close()
-    print("\n✅ 已储存到 "+name+".data")
+        print("\n❗️ no such file:", filename)
+        initialize(valuename)
+        f = open(filename, "rb")
+        tempdata = pickle.load(f)
+        return tempdata
 
 
 #打印字典(old)
@@ -194,7 +212,7 @@ print("\n\n🧅 🥬 🥕 🍅 🥚 🍗 🥩 我是新鲜食材精 🧅 🥬 �
 freshfood = readdata("freshfood")
 
 #读取danger数据
-danger = pickle.load(open('danger.data', 'rb'))
+danger = readdata("danger")
 
 # 生成全部食材大字典
 allfood = getallitems(freshfood)
@@ -205,8 +223,8 @@ for food in list(danger.keys()):
     if food not in allfood or allfood[food]==0:
         dekey(danger,food)
         print("🗑 已自动删除没有的危险食品：",food)
-print("\n💬 已调整危险食材")
-saveit(danger,"danger")
+        print("\n💬 已调整危险食材")
+        saveit(danger,"danger")
 
 #调整危险食材数量
 for food,count in list(danger.items()):
