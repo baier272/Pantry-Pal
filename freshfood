@@ -26,12 +26,14 @@ def initialize(valuename):
     filename = valuename + ".data"
     f = open(filename, "wb")
     if valuename == "freshfood":
-        freshfood = {'vegetables': {'青椒': 3, '菠菜': 1, '生菜': 1}, 'protein': {'豆腐': 2, '豆豉鲮鱼': 1}, 'carbon': {'土豆': 4, '红薯': 5}, 'complex': {'鸿禧菇': 2, '金针菇': 1}, 'fruits': {'香蕉': 3,  '橙子': 1}}
+        freshfood = {}
+        #freshfood = {'vegetables': {'青椒': 3, '菠菜': 1, '生菜': 1}, 'protein': {'豆腐': 2, '豆豉鲮鱼': 1}, 'carbon': {'土豆': 4, '红薯': 5}, 'complex': {'鸿禧菇': 2, '金针菇': 1}, 'fruits': {'香蕉': 3,  '橙子': 1}}
         fb = open("freshfood.data", 'wb')
         pickle.dump(freshfood, fb)  # 存入总字典文件
         print("\n✅ 已初始化 freshfood.data")
     elif valuename == "danger":
-        danger = {"香蕉":2,"豆腐":1}
+        danger = {}
+        #danger = {"香蕉":2,"豆腐":1}
         fb = open("danger.data", 'wb')
         pickle.dump(danger, fb)  # 存入快到期食材
         print("\n✅ 已初始化 danger.data")
