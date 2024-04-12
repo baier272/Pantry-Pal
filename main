@@ -1,0 +1,226 @@
+# 添加材料和查询材料
+
+# 字段初始值
+changes = {}
+
+
+#加载功能
+
+import pickle
+
+#读取数据
+filename = 'wehave.data'
+f = open(filename, 'rb')
+wehave = pickle.load(f)
+
+filename2 = 'danger.data'
+f2 = open(filename2, 'rb')
+danger = pickle.load(f2)
+
+
+#定义功能
+
+def read_data(name):
+    filename = name + ".data"
+    if os.path.exists(filename):
+        f = open(filename, "rb")
+        templs = pickle.load(f)
+import os
+
+#查看功能
+def view():
+    print("❇️  现有食材：\n______")
+    newlist = list()
+    for food, count in wehave.items():
+        newlist.append((count,food))
+    newlist = sorted(newlist,reverse=True)
+    for count,food in newlist:
+        if count > 0:
+            print("🔘",food,count)
+    print("\n🈳️️ 已缺少食材：\n______")
+    for count,food in newlist:
+        if count == 0:
+            print("🔘",food,count)
+    print("\n⚠️ 危险食材：\n______")
+    for food,count in danger.items():
+        print("🔘",food,count)
+
+
+#确认功能
+def check(ck,food,wehave_before,wehave_after):
+    if len(ck) <1:
+        wehave[food] = wehave_after
+        print("✔️ 已完成修改")
+        changes[food] = changes.get(food,0) + wehave_after - wehave_before
+    elif ck == "n":
+        wehave[food] = wehave_before
+        print("🌀️ 已撤销")
+    elif ck == "d":
+        defood(wehave, food)
+        print("✔️✔️ 已删除该食材")
+    else:
+        wehave[food] = wehave_before
+        print("🌀️ 已撤销")
+    return ck
+#添加功能
+def addfood(food,n):
+    wehave_before = wehave.get(food, 0)
+    print("之前:", food,wehave_before)
+    wehave_after = wehave.get(food, 0) + n
+    print("💬 即将添加：",food,n)
+    ck = input("🔔 确定修改？（回车:是；n:否；d:删除食材):")
+    check(ck,food, wehave_before, wehave_after)
+    if ck == "1":
+        print("💬 添加后：",food,wehave[food])
+    return wehave
+#减少功能
+def redufood(food,n):
+    wehave_before = wehave.get(food, 0)
+    print("之前：", food,wehave_before)
+    wehave_after = wehave.get(food, 0) - n
+    if wehave_after < 0:
+        wehave_after = 0
+    print("💬 即将减少：", food, n)
+    ck = input("🔔 确定修改？（回车:是；n:否；d:删除食材):")
+    check(ck,food, wehave_before, wehave_after)
+    if ck == "1":
+        print("💬 减少后：",food,wehave[food])
+    return wehave
+
+#删除功能
+def defood(d,key):
+    if key in d:
+        del d[key]
+        return d
+
+#本次修改情况
+def thistime():
+    print("\n_____本次修改情况_____")
+    for food,count in changes.items():
+        print(food,count)
+
+#保存变量
+def saveit():
+    f = open(filename, 'wb')
+    pickle.dump(wehave, f)
+    f.close()
+
+    f2 = open(filename2, 'wb')
+    pickle.dump(danger, f2)
+    f2.close()
+
+    print("\n✅ 已储存")
+
+#删除已经没有的危险食品
+
+for food in list(danger.keys()):
+    if food not in wehave or wehave[food]==0:
+        defood(danger,food)
+        print("🗑 已自动删除没有的危险食品：",food)
+
+
+
+
+#运行主循环
+
+while True:
+    print("\n\n1:📥 添加; 2:🗑 减少; 3:🔎 查询; 4:⚠️ 危险食材; 5：✅ 保存并退出；6：不保存退出")
+    choice = input("\n请输入指令:")
+    try:
+        choice = int(choice)
+    except:
+        print("❗️指令错误，请输入数字序号")
+        continue
+    if choice == 1:
+        #展示序号
+        print("❇️ 现有食材：\n______")
+        temp = list()
+        for food in wehave.keys():
+            temp.append(food)
+            print(temp.index(food) + 1, food)
+        # 输入添加的食材
+        print("\n---开始添加---\n")
+        ch = input("请输入添加的食材名或序号：")
+        try:
+            ch = int(ch) - 1
+            food = temp[ch]
+        except:
+            food = ch
+        #输入增加
+        n = input("输入添加 {} 的数量：".format(food))
+        try:
+            n = int(n)
+        except:
+            print("❗️指令错误")
+            continue
+        #执行添加
+        addfood(food,n)
+    elif choice == 2:
+        #展示现有食材和序号
+        print("❇️ 现有食材：\n______")
+        temp = list()
+        for food,count in wehave.items():
+            temp.append(food)
+            print(temp.index(food) + 1, food,count)
+        #输入减少内容
+        print("\n---开始减少---\n")
+        ch = input("请输入减少的食材序号：")
+        try:
+            ch = int(ch) - 1
+            food = temp[ch]
+        except:
+            print("❗️指令错误")
+            continue
+        print(food,"现有：",wehave[food])
+        n = input("输入减少数量（default：all）：")
+        try:
+            n = int(n)
+        except:
+            n = wehave[food]
+        #开始减少
+        redufood(food,n)
+    elif choice == 3:
+        print("🔎 正在查询...\n...")
+        view()
+    elif choice == 4:
+        print("\n⚠️ 危险食材：\n_______")
+        for (food,count) in danger.items():
+            print(food,count)
+        while True:
+            food = input("\n请输入要添加的危险食材：")
+            if len(food)==0:
+                print("无")
+                break
+            else:
+                if food not in wehave.keys() or wehave[food]==0:
+                    print("❗️该食材不在现有食材列表中！请先添加")
+                    print("---开始添加---")
+                    n = input("输入 "+food+" 的添加数量：")
+                    try:
+                        n = int(n)
+                    except:
+                        print("❗️指令错误3"
+                              "")
+                        continue
+                    addfood(food, n)
+                #danger[food]=danger.get(food,0)
+                danger[food]=wehave[food]
+                print("💬 已添加危险食品：", food)
+        while True:
+            food = input("\n请输入要移除的危险食材：")
+            if len(food)==0:
+                print("无")
+                break
+            else:
+                defood(danger,food)
+                print("💬 已删除危险食品：",food)
+    elif choice == 5:
+        thistime()
+        saveit()
+        break
+    elif choice == 6:
+        print("未保存，结束。")
+        break
+    else:
+        print("❗️指令错误，请重新输入")
+        continue
