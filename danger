@@ -1,0 +1,16 @@
+# danger 初始化数据
+
+import pickle
+
+danger = {"牛油果":1}
+
+filename = 'danger.data'
+
+f = open(filename, 'wb')
+pickle.dump(danger, f)
+f.close()
+
+
+f = open(filename, 'rb')
+danger = pickle.load(f)
+print(danger)
