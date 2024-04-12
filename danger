@@ -1,4 +1,5 @@
 # danger 初始化数据
+# 已融合进“fresh food”，不需要手动运行了
 
 import pickle
 
