@@ -7,6 +7,7 @@ changes = {}
 #加载功能
 
 import pickle
+import os
 
 #读取数据
 filename = 'wehave.data'
@@ -25,7 +26,7 @@ def read_data(name):
     if os.path.exists(filename):
         f = open(filename, "rb")
         templs = pickle.load(f)
-import os
+
 
 #查看功能
 def view():
