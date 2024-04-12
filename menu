@@ -3,10 +3,14 @@
 import pickle
 import os
 
-
-# menu = {}
 ingrs = []
 temp = []
+
+# 初始化
+def initialize():
+    menu = {}  #初始值
+    saveit(menu, "menu")
+    print("✅ 已完成初始化")
 
 #读取数据文件，并生成临时变量 tempdata
 def readdata(valuename):
@@ -17,6 +21,11 @@ def readdata(valuename):
         return tempdata
     else:
         print("❗️ no such file:%s", filename)
+        initialize()
+        f = open(filename, "rb")
+        tempdata = pickle.load(f)
+        return tempdata
+
 
 #保存变量的同名数据文件
 def saveit(vir,name):
@@ -63,8 +72,7 @@ def dekey(d,key):
         del d[key]
         return d
 
-#menu = {}  初始值
-#saveit(menu, "menu")
+
 
 menu = readdata("menu")
 freshfood = readdata("freshfood")
